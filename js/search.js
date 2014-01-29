@@ -1,11 +1,20 @@
+function html_entity_decode(txt){
+    var randomID = Math.floor((Math.random()*100000)+1);
+    $('body').append('<div id="random'+randomID+'"></div>');
+    $('#random'+randomID).html(txt);
+    var entity_decoded = $('#random'+randomID).html();
+    $('#random'+randomID).remove();
+    return entity_decoded;
+}
+
 // add ash or thorn to the input
 function append_search(cha) {
-    $("#search").val($("#search").val() + cha)
+    $("#search").val($("#search").val() + html_entity_decode(cha))
     $("#search").focus()
     update_search()
 }
 $("#ash").click(function() { append_search("æ") })
-$("#thorn").click(function() { Math.random() > 0.5 ? append_search("ð") : append_search("þ")})
+$("#thorn").click(function() { Math.random() > 0.5 ? append_search("&eth;") : append_search("þ")})
 
 // handle search input change
 $("#search").keyup(function() { update_search() });
@@ -14,13 +23,13 @@ $("#search").keyup(function() { update_search() });
 function clean(input) {
     input = input.toLowerCase()
     input = input.replace(new RegExp('&#x0304;', 'g'), '');
-    return input.replace(new RegExp('þ', 'g'), 'ð');
+    return input.replace(new RegExp('þ', 'g'), '&eth;');
 }
 
 // bold the searched substring
 function highlight_search(search, word) {
    idx = clean(word).indexOf(search)
-   if(idx == -1) {
+   if(idx == -1 || search.length < 1) {
        return word;
    }
    
