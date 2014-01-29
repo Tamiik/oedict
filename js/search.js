@@ -1,10 +1,7 @@
-function html_entity_decode(txt){
-    var randomID = Math.floor((Math.random()*100000)+1);
-    $('body').append('<div id="random'+randomID+'"></div>');
-    $('#random'+randomID).html(txt);
-    var entity_decoded = $('#random'+randomID).html();
-    $('#random'+randomID).remove();
-    return entity_decoded;
+function html_entity_decode(input) {
+  var y = document.createElement('textarea');
+  y.innerHTML = input;
+  return y.value;
 }
 
 // add ash or thorn to the input
@@ -13,17 +10,57 @@ function append_search(cha) {
     $("#search").focus()
     update_search()
 }
-$("#ash").click(function() { append_search("æ") })
-$("#thorn").click(function() { Math.random() > 0.5 ? append_search("&eth;") : append_search("þ")})
+$("#ash").click(function() { append_search("&aelig;") })
+$("#thorn").click(function() { Math.random() > 0.5 ? append_search("&eth;") : append_search("&thorn;")})
 
 // handle search input change
 $("#search").keyup(function() { update_search() });
 
-// clean up input for better matches
+// clean input to deal with thorn, macrons for matches
 function clean(input) {
     input = input.toLowerCase()
     input = input.replace(new RegExp('&#x0304;', 'g'), '');
-    return input.replace(new RegExp('þ', 'g'), '&eth;');
+    
+    input = input.replace(new RegExp('&eth;', 'g'), '6');
+    input = input.replace(new RegExp('&thorn;', 'g'), '6');
+    input = input.replace(new RegExp('&aelig;', 'g'), '7');
+    
+    input = input.replace(new RegExp('þ', 'g'), '6');
+    input = input.replace(new RegExp('ð', 'g'), '6');
+    input = input.replace(new RegExp('æ', 'g'), '7');
+    
+    input = input.replace(new RegExp('\u00F0', 'g'), '6');
+    input = input.replace(new RegExp('\u00FE', 'g'), '6');
+    input = input.replace(new RegExp('\u00E6', 'g'), '7');
+    
+    return input;
+}
+
+// turn macrons and thorn into single characters
+function normalize(input) {
+    input = input.replace(new RegExp('a&#x0304;', 'g'), '1');
+    input = input.replace(new RegExp('e&#x0304;', 'g'), '2');
+    input = input.replace(new RegExp('i&#x0304;', 'g'), '3');
+    input = input.replace(new RegExp('o&#x0304;', 'g'), '4');
+    input = input.replace(new RegExp('u&#x0304;', 'g'), '5');
+    input = input.replace(new RegExp('&eth;', 'g'), '6');
+    input = input.replace(new RegExp('&thorn;', 'g'), '6');
+    input = input.replace(new RegExp('&aelig;&#x0304;', 'g'), '8');
+    input = input.replace(new RegExp('&aelig;', 'g'), '7');
+    return input;
+}
+
+// turn letters back into alpha/thorn
+function unnormalize(input) {
+    input = input.replace(new RegExp('1', 'g'), 'a&#x0304;');
+    input = input.replace(new RegExp('2', 'g'), 'e&#x0304;');
+    input = input.replace(new RegExp('3(?!04)', 'g'), 'i&#x0304;');
+    input = input.replace(new RegExp('4(?!;)', 'g'), 'o&#x0304;');
+    input = input.replace(new RegExp('5', 'g'), 'u&#x0304;');
+    input = input.replace(new RegExp('6', 'g'), '&thorn;');
+    input = input.replace(new RegExp('7', 'g'), '&aelig;');
+    input = input.replace(new RegExp('8', 'g'), '&aelig;&#x0304;');
+    return input;
 }
 
 // bold the searched substring
@@ -33,16 +70,9 @@ function highlight_search(search, word) {
        return word;
    }
    
-   // adjust indices if there are macrons
-   macronidx = idx;
-   numMacrons = 0;
-   while(word.indexOf('&#x0304;') > macronidx) {
-       macronidx = word.indexOf('&#x0304;');
-       numMacrons++;
-   }
-   
-   return word.substr(0, idx) + "<strong>" + word.substr(idx, search.length+(numMacrons*8))
-                                + "</strong>" + word.substr(idx+search.length+(numMacrons*8))
+   normalized = normalize(word);
+   return unnormalize(normalized.substr(0, idx)) + "<strong>" + unnormalize(normalized.substr(idx, search.length))
+                                + "</strong>" + unnormalize(normalized.substr(idx+search.length))
 }
 
 // update the table with the search query
