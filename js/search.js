@@ -57,7 +57,7 @@ function unnormalize(input) {
     input = input.replace(new RegExp('3(?!04)', 'g'), 'i&#x0304;');
     input = input.replace(new RegExp('4(?!;)', 'g'), 'o&#x0304;');
     input = input.replace(new RegExp('5', 'g'), 'u&#x0304;');
-    input = input.replace(new RegExp('6', 'g'), '&thorn;');
+    input = input.replace(new RegExp('6', 'g'), '&eth;');
     input = input.replace(new RegExp('7', 'g'), '&aelig;');
     input = input.replace(new RegExp('8', 'g'), '&aelig;&#x0304;');
     return input;
