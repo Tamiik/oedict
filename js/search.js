@@ -13,7 +13,7 @@ $("#search").keyup(function() { update_search() });
 // clean up input for better matches
 function clean(input) {
     input = input.toLowerCase()
-    input = input.replace(new RegExp('\u0304', 'g'), '');
+    input = input.replace(new RegExp('&#x0304;', 'g'), '');
     return input.replace(new RegExp('þ', 'g'), 'ð');
 }
 
@@ -27,13 +27,13 @@ function highlight_search(search, word) {
    // adjust indices if there are macrons
    macronidx = idx;
    numMacrons = 0;
-   while(word.substr(macronidx, search.length+numMacrons+1).indexOf('\u0304') > macronidx) {
-       macronidx = word.substr(idx, search.length+numMacrons).indexOf('\u0304');
+   while(word.indexOf('&#x0304;') > macronidx) {
+       macronidx = word.indexOf('&#x0304;');
        numMacrons++;
    }
    
-   return word.substr(0, idx) + "<strong>" + word.substr(idx, search.length+numMacrons)
-                                + "</strong>" + word.substr(idx+search.length+numMacrons)
+   return word.substr(0, idx) + "<strong>" + word.substr(idx, search.length+(numMacrons*8))
+                                + "</strong>" + word.substr(idx+search.length+(numMacrons*8))
 }
 
 // update the table with the search query

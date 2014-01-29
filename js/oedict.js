@@ -83,7 +83,7 @@ oedict = [
 ["fīf", "five"],
 ["fīftig", "fifty"],
 ["flāh", "treacherous"],
-["flīeman", "drive off, rout"],
+["fli&#x0304;eman", "drive off, rout"],
 ["flōwan", "flow"],
 ["folc (n.)", "a folk, nation"],
 ["folgian", "follow"],
