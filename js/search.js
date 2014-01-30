@@ -43,6 +43,7 @@ function normalize(input) {
     input = input.replace(new RegExp('i&#x0304;', 'g'), '3');
     input = input.replace(new RegExp('o&#x0304;', 'g'), '4');
     input = input.replace(new RegExp('u&#x0304;', 'g'), '5');
+    input = input.replace(new RegExp('y&#x0304;', 'g'), '9');
     input = input.replace(new RegExp('&eth;', 'g'), '6');
     input = input.replace(new RegExp('&thorn;', 'g'), '6');
     input = input.replace(new RegExp('&aelig;&#x0304;', 'g'), '8');
@@ -57,6 +58,7 @@ function unnormalize(input) {
     input = input.replace(new RegExp('3(?!04)', 'g'), 'i&#x0304;');
     input = input.replace(new RegExp('4(?!;)', 'g'), 'o&#x0304;');
     input = input.replace(new RegExp('5', 'g'), 'u&#x0304;');
+    input = input.replace(new RegExp('9', 'g'), 'y&#x0304;');
     input = input.replace(new RegExp('6', 'g'), '&eth;');
     input = input.replace(new RegExp('7', 'g'), '&aelig;');
     input = input.replace(new RegExp('8', 'g'), '&aelig;&#x0304;');
